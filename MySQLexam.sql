@@ -23,19 +23,18 @@ limit 3
 employees & customers
 
 ###C
+
 DELIMITER $$
-CREATE PROCEDURE SP(in e_number int)
+CREATE  PROCEDURE employee_inactive(in emp_id int)
 Begin
 
-select *, 'inactive' as statues 
-from employees 
-where employeeNumber=e_number;
+update customers
+set salesrepemployeenumber=(select reportsto from employees where employeenumber=emp_id);
 
-update customers c, (select * from employees where employeeNumber=e_number) t
-set c.salesRepEmployeeNumber=t.reportsTo
-where t.employeeNumber =c.salesRepEmployeeNumber;
+delete from employees
+where employeenumber=emp_id;
 
-END $$
+end$$
 
 DELIMITER ;
 
