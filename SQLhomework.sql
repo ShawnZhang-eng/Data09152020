@@ -269,6 +269,43 @@ from employees
 where reportsTo in (select employeeNumber
 from (select * from employees where firstname='William' and lastname='Patterson') t)
 
+##5.3
+select p.*
+from customers c join orders o on c.customerNumber=o.customerNumber
+join orderdetails od on o.orderNumber=od.orderNumber
+join products p on od.productCode=p.productCode
+where c.customerName='Herkku Gifts'
+
+##5.4
+select salesRepEmployeeNumber, sum(commission) as commission
+from
+(select 0.05*amount as commission, c.salesRepEmployeeNumber, e.lastname, e.firstname
+from employees e join customers c on e.employeeNumber=c.salesRepEmployeeNumber
+join payments p on c.customerNumber=p.customerNumber) t
+group by salesRepEmployeeNumber
+order by lastname, firstname
+
+##5.5
+select MAX(datediff(b.orderDate,a.orderDate)) as diff  
+from orders a join orders b
+
+##5.6
+select CustomerNumber,avg(diff) as avg_d
+from 
+(select c.customerNumber, datediff(shippedDate, orderDate) as diff 
+from customers c join orders o on c.customerNumber=o.customerNumber) t
+group by customerNumber
+order by avg_d desc
+
+##5.7
+select orderNumber, sum(value) as value
+from
+(select o.orderNumber, od.priceEach*od.quantityOrdered as value
+from orders o join orderdetails od 
+on o.orderNumber=od.orderNumber
+where date_format(shippedDate, '%Y-%m') = '2004-08') t
+group by orderNumber
+
 
 Correlated subqueries
 ------------------------
